@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { ArrowLineDown } from '../Icons/ArrowLineDown';
 import { BookingFeatures } from '../Icons/BookingFeatures';
 import { BookingOk } from '../Icons/BookingOk';
+import { CheckBox } from '../CheckBox';
 import './styles.scss';
 
 export type AccordionTask = {
@@ -18,10 +19,12 @@ export type AccordionGroupData = {
 
 export type AccordionGroupProps = {
   data: AccordionGroupData;
+  onChange?: (index: number, value: boolean) => void;
 };
 
 export interface AccordionProps {
   data: AccordionGroupData[];
+  onChange?: (groupIndex: number, taskIndex: number, value: boolean) => void;
 }
 
 function Accordion({ data, onChange }: AccordionProps) {
@@ -31,6 +34,9 @@ function Accordion({ data, onChange }: AccordionProps) {
         <li key={groupIndex}>
           <AccordionGroup
             data={group}
+            onChange={(taskIndex, value) =>
+              onChange?.(groupIndex, taskIndex, value)
+            }
           />
         </li>
       ))}
@@ -65,6 +71,17 @@ function AccordionGroup({ data, onChange }: AccordionGroupProps) {
           />
         </div>
       </div>
+      <ul className={clsx({ open })}>
+        {data.tasks?.map((task, index) => (
+          <li key={index} onClick={() => onChange?.(index, !task.checked)}>
+            <CheckBox
+              value={task.checked}
+              onChange={() => onChange?.(index, !task.checked)}
+            />{' '}
+            <div>{task.description}</div>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }

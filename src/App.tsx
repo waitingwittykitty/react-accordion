@@ -29,6 +29,14 @@ function App() {
     })();
   }, []);
 
+  const handleChange = (groupIndex: number, taskIndex: number, value: boolean) => {
+    setAccordionData(accordionData => {
+      const newAccordionData = structuredClone(accordionData);
+      newAccordionData[groupIndex].tasks[taskIndex].checked = value;
+      return newAccordionData;
+    });
+  };
+
   return (
     <main>
       <div className="box box-medium">
@@ -36,7 +44,7 @@ function App() {
           <h2>Lodgify Grouped Tasks</h2>
           <Progress value={overallProgress} classes={{ filled: 'bg-primary' }} />
         </div>
-        <Accordion data={accordionData} />
+        <Accordion data={accordionData} onChange={handleChange} />
       </div>
     </main>
   );
